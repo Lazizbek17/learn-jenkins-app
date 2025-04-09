@@ -23,26 +23,27 @@ pipeline {
         }
 
         // Unit Test stage
-        stage('Unit Test') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
-                }
-            }
-            steps {
-                sh '''
-                    echo "Unit Test bosqichi"
-                    test -f build/index.html
-                    npm test -- --testResultsProcessor=jest-junit
-                '''
-            }
-            post {
-                always {
-                    junit 'test-results/junit.xml'
-                }
-            }
+      stage('Unit Test') {
+    agent {
+        docker {
+            image 'node:18-alpine'
+            reuseNode true
         }
+    }
+    steps {
+        sh '''
+            echo "Unit Test bosqichi"
+            test -f build/index.html
+            npm test -- --testResultsProcessor=jest-junit
+        '''
+    }
+    post {
+        always {
+            junit '**/test-results/junit.xml'
+        }
+    }
+}
+
 
         // E2E Test stage
         stage('E2E') {
